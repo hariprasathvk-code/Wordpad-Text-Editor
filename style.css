@@ -1,0 +1,41 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins',sans-serif;
+}
+
+body {
+    background: #ddd;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container{
+    max-width:901px;
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.toolbar{
+    padding: 16px;
+    background: #eee;
+}
+
+.toolbar .head{
+    display: flex;
+    grid-gap: 10px;
+    margin-bottom: 16px;
+}
+
+.toolbar .head input{
+    max-width: 100px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    outline: none;
+}
