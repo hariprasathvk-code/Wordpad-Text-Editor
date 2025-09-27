@@ -13,6 +13,10 @@ body {
     min-height: 100vh;
 }
 
+li{
+    margin-left: 16px;
+}
+
 .container{
     max-width:901px;
     width: 100%;
