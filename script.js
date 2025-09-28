@@ -10,4 +10,3 @@ function addLink() {
 	const url = prompt('Insert url');
 	formatDoc('createLink', url);
 }
-
