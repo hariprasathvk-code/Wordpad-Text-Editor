@@ -27,100 +27,68 @@ function addlink() {
 }
 
 //filehandling saving and exporting
-class FileHandler {
-    constructor(contentElement, filenameInput, authorInput) {
-        this.content = contentElement;
-        this.filenameInput = filenameInput;
-        this.authorInput = authorInput;
-    }
-
-    get filename() {
-        return this.filenameInput.value || "untitled";
-    }
-
-    get author() {
-        return this.authorInput.value || "authorname";
-    }
-
-    createDownload(blob, extension) {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${this.filename}.${extension}`;
-        link.click();
-    }
-
-    newFile() {
-        this.content.innerHTML = "";
-        this.filenameInput.value = "untitled";
-        this.authorInput.value = "authorname";
-    }
-
-    saveAsTxt() {
-        const text = `Title: ${this.filename}\nAuthor: ${this.author}\n\n${this.content.innerText}`;
-        const blob = new Blob([text], { type: "text/plain" });
-        this.createDownload(blob, "txt");
-    }
-
-    saveAsPdf() {
-        const pdfContent = document.createElement("div");
-        pdfContent.innerHTML = `<h1>${this.filename}</h1>
-            <p><strong>Author:</strong> ${this.author}</p>${this.content.innerHTML}`;
-
-        html2pdf().set({
-            margin: 10,
-            filename: this.filename + ".pdf",
-            html2canvas: { scale: 2 }
-        }).from(pdfContent).save();
-    }
-
-    saveAsDoc() {
-        const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' 
-            xmlns:w='urn:schemas-microsoft-com:office:word'>
-            <head><meta charset='utf-8'></head><body>`;
-        const footer = "</body></html>";
-        const sourceHTML = header +
-            `<h1>${this.filename}</h1><p><strong>Author:</strong> ${this.author}</p>` +
-            this.content.innerHTML + footer;
-
-        const blob = new Blob(["\ufeff", sourceHTML], { type: "application/msword" });
-        this.createDownload(blob, "doc");
-    }
-
-    saveAsHtml() {
-        const htmlHeader = `<html><head><meta charset="utf-8"><title>${this.filename}</title></head><body>`;
-        const htmlTitle = `<h1>${this.filename}</h1>`;
-        const htmlAuthor = `<p><strong>Author:</strong> ${this.author}</p>`;
-        const htmlFooter = `</body></html>`;
-
-        const finalHTML = htmlHeader + htmlTitle + htmlAuthor + this.content.innerHTML + htmlFooter;
-        const blob = new Blob([finalHTML], { type: "text/html" });
-        this.createDownload(blob, "html");
-    }
-
-    handleAction(action) {
-        switch (action) {
-            case "new": this.newFile(); break;
-            case "txt": this.saveAsTxt(); break;
-            case "pdf": this.saveAsPdf(); break;
-            case "doc": this.saveAsDoc(); break;
-            case "html": this.saveAsHtml(); break;
-            default: console.warn("Unknown action:", action);
-        }
-    }
-}
-
-// Usage 
-const fileHandler = new FileHandler(
-    document.getElementById("content"),
-    document.getElementById("filename"),
-    document.getElementById("authorname")
-);
+const filename = document.getElementById('filename');
+const authorname = document.getElementById('authorname'); 
 
 function filehandle(value) {
-    fileHandler.handleAction(value);
-}
+    const currentFilename = filename.value || 'untitled';
+    const currentAuthor = authorname.value || 'authorname';
 
+    if (value === 'new') {
+        content.innerHTML = '';
+        filename.value = 'untitled';
+        authorname.value = 'authorname';
+    } 
+    // save as txt
+    else if (value === 'txt') {
+        const blob = new Blob([`Title: ${currentFilename}\nAuthor: ${currentAuthor}\n\n${content.innerText}`], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${currentFilename}.txt`;
+        link.click();
+    } 
+    //save as pdf
+    else if (value === 'pdf') {
+        const pdfContent = document.createElement('div');
+        pdfContent.innerHTML = `<h1>${currentFilename}</h1><p><strong>Author:</strong> ${currentAuthor}</p>${content.innerHTML}`;
+
+        html2pdf().set({ margin: 10, filename: currentFilename + ".pdf", html2canvas: { scale: 2 } })
+            .from(pdfContent)
+            .save();
+    } 
+    //save as doc(word file)
+    else if (value === 'doc') {
+        const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+                       "xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'></head><body>";
+        const footer = "</body></html>";
+        const sourceHTML = header + `<h1>${currentFilename}</h1><p><strong>Author:</strong> ${currentAuthor}</p>` + content.innerHTML + footer;
+
+        const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${currentFilename}.doc`;
+        link.click();
+    } 
+    //save as html
+    else if (value === 'html') {
+        const htmlHeader = `<html><head><meta charset="utf-8"><title>${currentFilename}</title></head><body>`;
+        const htmlTitle = `<h1>${currentFilename}</h1>`;
+        const htmlAuthor = `<p><strong>Author:</strong> ${currentAuthor}</p>`;
+        const htmlContent = content.innerHTML;
+        const htmlFooter = `</body></html>`;
+
+        const finalHTML = htmlHeader + htmlTitle + htmlAuthor + htmlContent + htmlFooter;
+
+        const blob = new Blob([finalHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${currentFilename}.html`;
+        link.click();
+    }
+}
 
 //image upload via url and local
 class Editor {
