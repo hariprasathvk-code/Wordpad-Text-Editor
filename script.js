@@ -398,8 +398,6 @@ findNextBtn.addEventListener("click", findNext);
 replaceOneBtn.addEventListener("click", replaceOne);
 replaceAllBtn.addEventListener("click", replaceAll);
 
-
-
 // Ribbon Tab Switching
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
