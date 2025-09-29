@@ -26,6 +26,15 @@ function addlink() {
     if (url) formatdoc('createLink', url);
 }
 
+//onclick functionality for text link
+content.addEventListener('click', function(e) {
+    const target = e.target;
+    if (target.tagName === 'A') {
+        e.preventDefault();
+        window.open(target.href, '_blank');
+    }
+});
+
 //filehandling saving and exporting
 class FileHandler {
     constructor(contentElement, filenameInput, authorInput) {
