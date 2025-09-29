@@ -292,3 +292,40 @@ window.addEventListener('DOMContentLoaded', restoreAutosave);
 // Autosave every 5 seconds
 setInterval(autosave, 5000);
 
+function openFindReplace() {
+    let contentEl = document.getElementById("content");
+    let html = contentEl.innerHTML;
+
+    // Remove old highlights
+    html = html.replace(/<mark class="find-highlight">(.*?)<\/mark>/gi, "$1");
+    contentEl.innerHTML = html;
+
+    let searchText = prompt("Enter text to find:");
+    if (!searchText) return;
+
+    let regex = new RegExp(searchText, "gi");
+
+    if (!regex.test(html)) {
+        alert("No matches found!");
+        return;
+    }
+
+    // Highlight all matches
+    html = html.replace(regex, match => `<mark class="find-highlight">${match}</mark>`);
+    contentEl.innerHTML = html;
+
+    // Ask for replace all
+    if (confirm(`Found matches for "${searchText}". Do you want to replace all?`)) {
+        let replaceText = prompt("Replace all with:");
+        if (replaceText !== null) {
+            let replacedHTML = contentEl.innerHTML.replace(
+                new RegExp(`<mark class="find-highlight">${searchText}</mark>`, "gi"),
+                replaceText
+            );
+            // Also remove any leftover highlight tags
+            replacedHTML = replacedHTML.replace(/<mark class="find-highlight">(.*?)<\/mark>/gi, replaceText);
+            contentEl.innerHTML = replacedHTML;
+            alert("All occurrences replaced.");
+        }
+    }
+}
