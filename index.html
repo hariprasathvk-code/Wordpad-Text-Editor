@@ -1,109 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordpad-texteditor</title>
-     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="style.css">
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordpad-texteditor</title>
+  <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="toolbar">
-            <div class="head">
-                <input type="text" placeholder="Filename" value="untitled" id="filename">
-                <input type="text" placeholder="AuthorName" value="authorname" id="authorname">
-                <select onchange="filehandle(this.value); this.selectedIndex=0">
-                    <option value="" selected="" hidden="" disabled="">File</option>
-                    <option value="new">New File</option>
-                    <option value="txt">Save as txt</option>
-                     <option value="doc">Save as doc</option>
-                    <option value="pdf">Save as pdf</option>
-                    <option value="html">Export as html</option>
-                </select>
-                <select onchange="formatdoc('formatblock', this.value); this.selectedIndex=0">
-                    <option value="" selected="" hidden="" disabled="">Format</option>
-                    <option value="h1">Heading 1</option>
-                    <option value="h2">Heading 2</option>
-                    <option value="h3">Heading 3</option>
-                    <option value="h4">Heading 4</option>
-                    <option value="h5">Heading 5</option>
-                    <option value="h6">Heading 6</option>
-                    <option value="p">Paragraph</option>
-                </select>
-               <select id="fontFamily" aria-label="Font family">
-                    <option value="" disabled selected hidden>Font</option>
-                    <option value="Arial" style="font-family: Arial;">Arial</option>
-                    <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
-                    <option value="Courier New" style="font-family: 'Courier New';">Courier New</option>
-                </select>
-                <select onchange="formatdoc('fontsize', this.value); this.selectedIndex=0">
-                    <option value="" selected="" hidden="" disabled="">Font size</option>
-                    <option value="1">Extra small</option>
-                    <option value="2">Small</option>
-                    <option value="3">Regular</option>
-                    <option value="4">Medium</option>
-                    <option value="5">Large</option>
-                    <option value="6">Extra Large</option>
-                    <option value="7">Big</option>
-                </select>
-                <div class="color">
-                    <span>Colour</span>
-                    <input type="color" oninput="formatdoc('forecolor', this.value); this.value='#000000';">
-                </div>
-                <div class="color">
-                    <span>Background</span>
-                    <input type="color" oninput="formatdoc('hiliteColor', this.value); this.value='#000000';">
-                </div>
-                <div class="preview">
-                    <button type="button" id="previewBtn" class="btn">Preview</button>
-                </div>
-                <div id="previewModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <div id="previewBody"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="btn-toolbar">
-                <button onclick="formatdoc('undo')" title="Undo"><i class='bx  bx-undo'  ></i> </button>
-                <button onclick="formatdoc('redo')" title="Redo"><i class='bx  bx-redo'  ></i> </button>
-                <button onclick="formatdoc('bold')" title="Bold"><i class='bx  bx-bold'  ></i> </button>
-                <button onclick="formatdoc('underline')" title="Underline"><i class='bx  bx-underline'  ></i> </button>
-                <button onclick="formatdoc('italic')" title="Italic"><i class='bx  bx-italic'  ></i> </button>
-                <button onclick="formatdoc('strikeThrough')" title="Strikethrough"><i class='bx  bx-strikethrough'  ></i> </button>
-                <button onclick="formatdoc('justifyLeft')" title="justifyLeft"><i class='bx  bx-align-left'  ></i> </button>
-                <button onclick="formatdoc('justifyCenter')" title="justifyCenter"><i class='bx  bx-align-center'  ></i> </button>
-                <button onclick="formatdoc('justifyRight')" title="justifyRight"><i class='bx  bx-align-right'  ></i> </button>
-                <button onclick="formatdoc('justifyFull')" title="justifyFull"><i class='bx  bx-align-justify'  ></i> </button>
-                <button onclick="formatdoc('insertOrderedList')" title="insertOrderedList"><i class='bx  bx-list-ol'  ></i> </button>
-                <button onclick="formatdoc('insertUnorderedList')" title="insertUnorderedList"><i class='bx  bx-list-ul'  ></i> </button>
-                <button onclick="formatdoc('indent')" title="Increase indent"><i class='bxr  bx-right-indent'  ></i> </i></button>
-                <button onclick="formatdoc('outdent')" title="Decrease indent"><i class='bxr  bx-left-indent'  ></i> </button>
-                <button onclick="addlink()" title="insertLink"><i class='bx  bx-link'  ></i> </button>
-                <button onclick="formatdoc('unlink')" title="unlink"><i class='bx  bx-unlink'  ></i> </button>
-                
-                <button type="button" class="tool-btn" id="insertImageUrlBtn" title="Insert image from URL"><i class="bx bx-image"></i></button>
-    
-                <button><label for="imageInput" class="tool-btn label-btn" title="Insert image from your device">
-                    <i class='bxr  bx-image-plus'  ></i> 
-                    <input id="imageInput" type="file" accept="image/*" hidden aria-hidden="true">
-                </label></button>
-                <button type="button" class="tool-btn" id="insertTableBtn" title="Insert table"><i class="bx bx-table"></i></button>
+  <div class="container">
+    <div class="toolbar">
 
-                <button type="button" id="themeToggle" title="Toggle Theme">🌙</button>
-                <button type="button" id="findReplaceBtn" title="Find & Replace" onclick="openFindReplace()">🔍</button>
+      <!-- Ribbon Tabs -->
+      <div class="ribbon-tabs">
+        <button class="tab-btn active" data-tab="fileTab">File</button>
+        <button class="tab-btn" data-tab="homeTab">Home</button>
+        <button class="tab-btn" data-tab="insertTab">Insert</button>
+        <button class="tab-btn" data-tab="editTab">Edit</button>
+        <button class="tab-btn" data-tab="themeTab">Theme</button>
+      </div>
 
+      <!-- File Tab -->
+      <div id="fileTab" class="tab-content active">
+        <div class="head">
+          <input type="text" placeholder="Filename" value="untitled" id="filename">
+          <input type="text" placeholder="AuthorName" value="authorname" id="authorname">
+          <select onchange="filehandle(this.value); this.selectedIndex=0">
+            <option value="" selected hidden disabled>File</option>
+            <option value="new">New File</option>
+            <option value="txt">Save as txt</option>
+            <option value="doc">Save as doc</option>
+            <option value="pdf">Save as pdf</option>
+            <option value="html">Export as html</option>
+          </select>
+          
+          <div class="preview">
+            <button type="button" id="previewBtn" class="btn">Preview</button>
+          </div>
+          <div id="previewModal" class="modal">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <div id="previewBody"></div>
             </div>
+          </div>
         </div>
-        <div id="content" contenteditable="true" spellcheck="false">
-            Enter your content here
-        </div>   
+      </div>
 
-    </div>   
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="script.js"></script>
+      <!-- Home Tab -->
+      <div id="homeTab" class="tab-content">
+        <div class="btn-toolbar">
+          <button onclick="formatdoc('undo')" title="Undo"><i class='bx bx-undo'></i></button>
+          <button onclick="formatdoc('redo')" title="Redo"><i class='bx bx-redo'></i></button>
+          <select onchange="formatdoc('formatblock', this.value)">
+            <option value="" selected hidden disabled>Format</option>
+            <option value="h1">Heading 1</option>
+            <option value="h2">Heading 2</option>
+            <option value="h3">Heading 3</option>
+            <option value="h4">Heading 4</option>
+            <option value="h5">Heading 5</option>
+            <option value="h6">Heading 6</option>
+            <option value="p">Paragraph</option>
+          </select>
+          <select id="fontFamily" aria-label="Font family">
+            <option value="" disabled selected hidden>Font</option>
+            <option value="Arial" style="font-family: Arial;">Arial</option>
+            <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+            <option value="Courier New" style="font-family: 'Courier New';">Courier New</option>
+          </select>
+          <select onchange="formatdoc('fontsize', this.value)">
+            <option value="" selected hidden disabled>Font size</option>
+            <option value="1">Extra small</option>
+            <option value="2">Small</option>
+            <option value="3">Regular</option>
+            <option value="4">Medium</option>
+            <option value="5">Large</option>
+            <option value="6">Extra Large</option>
+            <option value="7">Big</option>
+          </select>
+          <div class="color">
+            <span>Colour</span>
+            <input type="color" oninput="formatdoc('forecolor', this.value)">
+          </div>
+          <div class="color">
+            <span>Background</span>
+            <input type="color" oninput="formatdoc('hiliteColor', this.value)">
+          </div>
+          <button onclick="formatdoc('bold')" title="Bold"><i class='bx bx-bold'></i></button>
+          <button onclick="formatdoc('underline')" title="Underline"><i class='bx bx-underline'></i></button>
+          <button onclick="formatdoc('italic')" title="Italic"><i class='bx bx-italic'></i></button>
+          <button onclick="formatdoc('strikeThrough')" title="Strikethrough"><i class='bx bx-strikethrough'></i></button>
+          <button onclick="formatdoc('justifyLeft')" title="justifyLeft"><i class='bx bx-align-left'></i></button>
+          <button onclick="formatdoc('justifyCenter')" title="justifyCenter"><i class='bx bx-align-center'></i></button>
+          <button onclick="formatdoc('justifyRight')" title="justifyRight"><i class='bx bx-align-right'></i></button>
+          <button onclick="formatdoc('justifyFull')" title="justifyFull"><i class='bx bx-align-justify'></i></button>
+          <button onclick="formatdoc('insertOrderedList')" title="insertOrderedList"><i class='bx bx-list-ol'></i></button>
+          <button onclick="formatdoc('insertUnorderedList')" title="insertUnorderedList"><i class='bx bx-list-ul'></i></button>
+          <button onclick="formatdoc('indent')" title="Increase indent"><i class='bxr bx-right-indent'></i></button>
+          <button onclick="formatdoc('outdent')" title="Decrease indent"><i class='bxr bx-left-indent'></i></button>
+        </div>
+      </div>
+
+      <!-- Insert Tab -->
+      <div id="insertTab" class="tab-content">
+        <div class="btn-toolbar">
+          <button onclick="addlink()" title="insertLink"><i class='bx bx-link'></i></button>
+          <button onclick="formatdoc('unlink')" title="unlink"><i class='bx bx-unlink'></i></button>
+          <button type="button" class="tool-btn" id="insertImageUrlBtn" title="Insert image from URL"><i class="bx bx-image"></i></button>
+          <button>
+            <label for="imageInput" class="tool-btn label-btn" title="Insert image from your device">
+              <i class='bxr bx-image-plus'></i>
+              <input id="imageInput" type="file" accept="image/*" hidden aria-hidden="true">
+            </label>
+          </button>
+          <button type="button" class="tool-btn" id="insertTableBtn" title="Insert table"><i class="bx bx-table"></i></button>
+        </div>
+      </div>
+
+      <!-- Edit Tab -->
+        <div id="editTab" class="tab-content">
+  <div class="btn-toolbar">
+    <input type="text" id="findText" placeholder="Find..." />
+    <input type="text" id="replaceText" placeholder="Replace with..." />
+    <button type="button" id="findNext">Find Next</button>
+    <button type="button" id="replaceOne">Replace</button>
+    <button type="button" id="replaceAll">Replace All</button>
+  </div>
+</div>
+
+
+
+
+      <!-- Theme Tab -->
+      <div id="themeTab" class="tab-content">
+        <div class="btn-toolbar">
+          <button type="button" id="themeToggle" title="Toggle Theme">🌙</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div id="content" contenteditable="true" spellcheck="false">
+      Enter your content here
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -301,40 +301,117 @@ window.addEventListener('DOMContentLoaded', restoreAutosave);
 // Autosave every 5 seconds
 setInterval(autosave, 5000);
 
-function openFindReplace() {
-    let contentEl = document.getElementById("content");
-    let html = contentEl.innerHTML;
 
-    // Remove old highlights
-    html = html.replace(/<mark class="find-highlight">(.*?)<\/mark>/gi, "$1");
-    contentEl.innerHTML = html;
+//find and replace, replace all
+const ed = document.getElementById("content");
+const findInput = document.getElementById("findText");
+const replaceInput = document.getElementById("replaceText");
+const findNextBtn = document.getElementById("findNext");
+const replaceOneBtn = document.getElementById("replaceOne");
+const replaceAllBtn = document.getElementById("replaceAll");
 
-    let searchText = prompt("Enter text to find:");
-    if (!searchText) return;
+let lastMatchIndex = 0;
 
-    let regex = new RegExp(searchText, "gi");
+// Highlight next match
+function findNext() {
+  const searchTerm = findInput.value.trim();
+  if (!searchTerm) return;
 
-    if (!regex.test(html)) {
-        alert("No matches found!");
-        return;
+  const text = ed.innerText;
+  const matchIndex = text.toLowerCase().indexOf(searchTerm.toLowerCase(), lastMatchIndex);
+
+  if (matchIndex === -1) {
+    //alert("No more matches found");
+    lastMatchIndex = 0; // Reset
+    return;
+  }
+
+  lastMatchIndex = matchIndex + searchTerm.length;
+
+  // Highlight the match in editor
+  let charIndex = 0;
+  let nodeStack = [ed];
+  let node, found = false;
+
+  while (!found && (node = nodeStack.pop())) {
+    if (node.nodeType === 3) { // Text node
+      const nextCharIndex = charIndex + node.length;
+      if (matchIndex >= charIndex && matchIndex < nextCharIndex) {
+        const range = document.createRange();
+        range.setStart(node, matchIndex - charIndex);
+        range.setEnd(node, matchIndex - charIndex + searchTerm.length);
+
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ed.focus();
+        found = true;
+      }
+      charIndex = nextCharIndex;
+    } else {
+      for (let i = node.childNodes.length - 1; i >= 0; i--) {
+        nodeStack.push(node.childNodes[i]);
+      }
     }
-
-    // Highlight all matches
-    html = html.replace(regex, match => `<mark class="find-highlight">${match}</mark>`);
-    contentEl.innerHTML = html;
-
-    // Ask for replace all
-    if (confirm(`Found matches for "${searchText}". Do you want to replace all?`)) {
-        let replaceText = prompt("Replace all with:");
-        if (replaceText !== null) {
-            let replacedHTML = contentEl.innerHTML.replace(
-                new RegExp(`<mark class="find-highlight">${searchText}</mark>`, "gi"),
-                replaceText
-            );
-            // Also remove any leftover highlight tags
-            replacedHTML = replacedHTML.replace(/<mark class="find-highlight">(.*?)<\/mark>/gi, replaceText);
-            contentEl.innerHTML = replacedHTML;
-            alert("All occurrences replaced.");
-        }
-    }
+  }
 }
+
+// Replace current selection
+function replaceOne() {
+  const searchTerm = findInput.value.trim();
+  const replacement = replaceInput.value;
+  if (!searchTerm) return;
+
+  const sel = window.getSelection();
+  const selectedText = sel.toString();
+
+  if (selectedText.toLowerCase() === searchTerm.toLowerCase()) {
+    document.execCommand("insertText", false, replacement);
+    lastMatchIndex = sel.anchorOffset + replacement.length; // update index
+  }
+
+  findNext();
+}
+
+// Replace all matches
+function replaceAll() {
+  const searchTerm = findInput.value.trim();
+  const replacement = replaceInput.value;
+  if (!searchTerm) return;
+
+  const regex = new RegExp(searchTerm, "gi");
+
+  function walkAndReplace(node) {
+    if (node.nodeType === 3) {
+      node.nodeValue = node.nodeValue.replace(regex, replacement);
+    } else {
+      node.childNodes.forEach(walkAndReplace);
+    }
+  }
+
+  walkAndReplace(ed);
+  lastMatchIndex = 0;
+}
+
+// Event listeners
+findNextBtn.addEventListener("click", findNext);
+replaceOneBtn.addEventListener("click", replaceOne);
+replaceAllBtn.addEventListener("click", replaceAll);
+
+
+
+// Ribbon Tab Switching
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // remove active from all
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+
+    // add active to clicked
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
