@@ -258,3 +258,37 @@ window.addEventListener('click', (e) => {
         previewModal.style.display = 'none';
     }
 });
+
+
+const themeToggleBtn = document.getElementById('themeToggle');
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    themeToggleBtn.textContent = document.body.classList.contains('dark') ? "☀️" : "🌙";
+});
+// Autosave function
+function autosave() {
+    const data = {
+        filename: filename.value || 'untitled',
+        author: authorname.value || 'authorname',
+        content: content.innerHTML
+    };
+    localStorage.setItem('autosaveData', JSON.stringify(data));
+    console.log('Autosaved'); 
+}
+
+// Restore function on page load
+function restoreAutosave() {
+    const savedData = localStorage.getItem('autosaveData');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        filename.value = data.filename;
+        authorname.value = data.author;
+        content.innerHTML = data.content;
+    }
+}
+
+window.addEventListener('DOMContentLoaded', restoreAutosave);
+
+// Autosave every 5 seconds
+setInterval(autosave, 5000);
+
