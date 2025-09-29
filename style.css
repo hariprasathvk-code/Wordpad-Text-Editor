@@ -195,3 +195,48 @@ a {
 .preview .btn:hover {
     background: #f3f3f3;
 }
+
+body.dark {
+    background: #1e1e1e;
+}
+
+body.dark .container {
+    background: #2a2a2a;
+}
+
+body.dark .toolbar {
+    background: #333;
+}
+
+body.dark .toolbar .head input,
+body.dark .toolbar .head select,
+body.dark .toolbar .head .color input {
+    background: #2a2a2a;
+    color: #f5f5f5;
+    border: 2px solid #555;
+}
+
+body.dark .toolbar .btn-toolbar button,
+body.dark .preview .btn,
+body.dark #themeToggle {
+    background: #3a3a3a;
+    color: #f5f5f5;
+    border: 2px solid #555;
+}
+
+body.dark .toolbar .btn-toolbar button:hover,
+body.dark .preview .btn:hover,
+body.dark #themeToggle:hover {
+    background: #505050;
+}
+
+body.dark #content {
+    background: #2a2a2a;
+    color: #f5f5f5;
+    border-top: 1px solid #555;
+}
+
+body.dark .modal-content {
+    background: #2a2a2a;
+    color: #f5f5f5;
+}
