@@ -118,8 +118,6 @@ class FileHandler {
         }
     }
 }
-
-// Usage 
 const fileHandler = new FileHandler(
     document.getElementById("content"),
     document.getElementById("filename"),
@@ -334,7 +332,7 @@ function findNext() {
   let node, found = false;
 
   while (!found && (node = nodeStack.pop())) {
-    if (node.nodeType === 3) { // Text node
+    if (node.nodeType === 3) { 
       const nextCharIndex = charIndex + node.length;
       if (matchIndex >= charIndex && matchIndex < nextCharIndex) {
         const range = document.createRange();
@@ -393,7 +391,6 @@ function replaceAll() {
   lastMatchIndex = 0;
 }
 
-// Event listeners
 findNextBtn.addEventListener("click", findNext);
 replaceOneBtn.addEventListener("click", replaceOne);
 replaceAllBtn.addEventListener("click", replaceAll);
@@ -404,11 +401,10 @@ const tabContents = document.querySelectorAll('.tab-content');
 
 tabButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    // remove active from all
+
     tabButtons.forEach(b => b.classList.remove('active'));
     tabContents.forEach(c => c.classList.remove('active'));
 
-    // add active to clicked
     btn.classList.add('active');
     document.getElementById(btn.dataset.tab).classList.add('active');
   });
